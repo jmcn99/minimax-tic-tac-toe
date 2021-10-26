@@ -121,7 +121,7 @@ def getBestMove(b, isMax):
                 if isMax == True:
                     b[x][y] = "x"
                 else:
-                    b[x][y] = "y"
+                    b[x][y] = "o"
                 tempScore = minimax(b, 0, not isMax) 
                 print(tempScore)
                 b[x][y] = " "
@@ -153,9 +153,9 @@ def play():
         #Random starting player
 
 
-        makeMove(board, getInput(), True)
+        #makeMove(board, getInput(), True)
         makeMove(board, getBestMove(board, True), False)
-        #makeMove(board, getBestMove(board, False), True)
+        makeMove(board, getBestMove(board, False), True)
        
         
         
