@@ -81,7 +81,6 @@ def movesLeft(b):
 def minimax(b, depth, isMax):
     #Check base case, see if someone won or tie
     if movesLeft(b) == False:
-        print(getScore(b))
         return getScore(b)
 
                 
@@ -89,54 +88,51 @@ def minimax(b, depth, isMax):
     if isMax:
         maxEval = float("-Inf")
 
-        """
-        for move in getMoves(b, False):
-            #printBoard(move)
-            eval = minimax(move, depth + 1, False)
-            maxEval = max(maxEval, eval)
-        #print("Max Eval = " + str(maxEval))
-        return maxEval
-        """
         for x in range(0,3):
             for y in range(0,3):
                 if b[x][y] == " ":
                     b[x][y] = "x"
                     eval = minimax(b, depth + 1, False)
-                    maxEval = max(maxEval, eval)
+                    maxEval = max(maxEval, eval) - depth
                     b[x][y] = " "
         return maxEval
     
     else:
         minEval = float("Inf")
-        """
-        for move in getMoves(b, True):
-            #printBoard(move)
-            eval = minimax(move, depth + 1, True)
-            minEval = min(minEval, eval)
-        #print("Min Eval = " + str(minEval))
-        return minEval
-        """
+       
         for x in range(0,3):
             for y in range(0,3):
                 if b[x][y] == " ":
                     b[x][y] = "o"
                     eval = minimax(b, depth + 1, True)
-                    minEval = min(minEval, eval)
+                    minEval = min(minEval, eval) + depth
                     b[x][y] = " "
         return minEval
 
-def getBestMove(b):
+def getBestMove(b, isMax):
     bestMove = None
-    bestScore = float("-Inf")
+    if isMax == True:
+        bestScore = float("-Inf")
+    else: 
+        bestScore = float("Inf")
     for x in range(0,3):
         for y in range(0,3):
             if b[x][y] == " ":
-                b[x][y] = "x"
-                tempScore = minimax(b, 0, False) 
+                if isMax == True:
+                    b[x][y] = "x"
+                else:
+                    b[x][y] = "y"
+                tempScore = minimax(b, 0, not isMax) 
+                print(tempScore)
                 b[x][y] = " "
-                if tempScore > bestScore:
-                    bestScore = tempScore
-                    bestMove = (x,y)
+                if isMax == True:
+                    if tempScore > bestScore:
+                        bestScore = tempScore
+                        bestMove = (x,y)
+                else:
+                    if tempScore < bestScore:
+                        bestScore = tempScore
+                        bestMove = (x,y)
     print(bestMove)
     return bestMove
 
@@ -158,15 +154,16 @@ def play():
 
 
         makeMove(board, getInput(), True)
-        makeMove(board, getBestMove(board), False)
+        makeMove(board, getBestMove(board, True), False)
+        #makeMove(board, getBestMove(board, False), True)
        
         
         
 
 def test():
-    board = [["x"," "," "],
-            [" "," "," "],
+    board = [["x"," ","o"],
+            ["x","x","o"],
             ["o"," "," "]]
-    print(getBestMove(board))
+    print(getBestMove(board, True))
 
 play()
